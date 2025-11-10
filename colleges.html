@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EduGuide — Colleges</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">EduGuide</div>
+      <nav class="nav">
+        <a href="career.html">Take Quiz</a>
+        <a href="colleges.html">Colleges</a>
+        <a href="timeline.html">Timeline</a>
+      </nav>
+      <div class="header-actions">
+        <button id="profileBtn3" class="btn ghost">Profile</button>
+        <button id="takeQuizBtn3" class="btn primary">Take Quiz</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container grid-layout">
+      <aside class="filters">
+        <h3>Filters</h3>
+        <label>Search</label>
+        <input id="collegeSearch" placeholder="College name, city..." />
+        <label>Type</label>
+        <select id="collegeType">
+          <option value="any">Any</option>
+          <option value="government">Government</option>
+          <option value="private">Private</option>
+          <option value="deemed">Deemed</option>
+        </select>
+      </aside>
+
+      <div class="college-list">
+        <!-- cards injected by JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>EduGuide</strong>
+        <p>Empowering students to make informed career decisions.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="career.html">Take Quiz</a></li>
+          <li><a href="colleges.html">Find Colleges</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
