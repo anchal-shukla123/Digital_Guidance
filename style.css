@@ -46,7 +46,7 @@ header{
 
         .slider-container {
             width: 100%;
-            background: white;
+            background: #24252A;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
@@ -91,7 +91,7 @@ header{
         .dots {
             text-align: center;
             padding: 5px;
-            background: white;
+            background: transparent;
         }
 
         .dot {
