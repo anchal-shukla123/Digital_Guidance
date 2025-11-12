@@ -1,9 +1,9 @@
- const slides = document.querySelectorAll('.slide');
+// Slider functionality
+        const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('dots');
         let currentSlide = 0;
         let slideInterval;
 
-        // Create dots
         slides.forEach((_, index) => {
             const dot = document.createElement('span');
             dot.classList.add('dot');
@@ -38,227 +38,325 @@
             clearInterval(slideInterval);
         }
 
-        // Start automatic sliding
         startSlider();
 
-        // Pause on hover
         const slider = document.getElementById('slider');
         slider.addEventListener('mouseenter', stopSlider);
         slider.addEventListener('mouseleave', startSlider);
 
+        // Typing effect
+        const text = "Find your Future Step by Step";
+        const typedTextElement = document.querySelector('.typed-text');
+        const cursorElement = document.querySelector('.cursor');
+        let charIndex = 0;
 
-const text = "Find your Future Step by Step";
-const typedTextElement = document.querySelector('.typed-text');
-const cursorElement = document.querySelector('.cursor');
-let charIndex = 0;
+        function typeText() {
+            if (charIndex < text.length) {
+                typedTextElement.textContent += text.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, 100);
+            } else {
+                cursorElement.style.display = 'none';
+            }
+        }
+        setTimeout(typeText, 500);
 
-function typeText() {
-    if (charIndex < text.length) {
-        typedTextElement.textContent += text.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeText, 100);
-    }
-    else {
-        
-            cursorElement.style.display = 'none';
-       
-    }
-}
-setTimeout(typeText, 500);
-// script.js - client-side behaviors (vanilla JS)
-// const API_ROOT = ''; // same origin
+        // Authentication variables
+        let registeredUsers = new Set();
+        let isLoggedIn = false;
+        let currentUser = '';
 
-// // --- Auth modal and actions (shared across pages) ---
-// document.addEventListener('DOMContentLoaded', () => {
-//   initAuthUI();
-//   initProfileButtons();
-//   initCollegePage();
-//   loadProfileIfOnPage();
-// });
+        // Modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const profileBtn = document.getElementById('profileBtn');
+        const welcomeText = document.getElementById('welcomeText');
+        const modalClose = document.getElementById('modalClose');
 
-// function initAuthUI() {
-//   const authModal = document.getElementById('authModal');
-//   const closeAuth = document.querySelectorAll('#closeAuth');
-//   const toggleAuthMode = document.querySelectorAll('#toggleAuthMode');
-//   const authForm = document.querySelectorAll('#authForm');
+        loginBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('show');
+        });
 
-//   // open auth modal from several buttons (header profile)
-//   document.querySelectorAll('#profileBtn, #profileBtn2, #profileBtn3, #profileBtn4, #profileBtn5').forEach(b => {
-//     b && b.addEventListener('click', openAuthModal);
-//   });
+        modalClose.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+        });
 
-//   // open from profile page button
-//   const openAuthFromProfile = document.getElementById('openAuthFromProfile');
-//   if (openAuthFromProfile) openAuthFromProfile.addEventListener('click', openAuthModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('show');
+            }
+        });
 
-//   if (closeAuth) closeAuth.forEach(btn => btn.addEventListener('click', closeAuthModal));
-//   if (toggleAuthMode) toggleAuthMode.forEach(btn => btn.addEventListener('click', toggleMode));
+        logoutBtn.addEventListener('click', () => {
+            isLoggedIn = false;
+            currentUser = '';
+            updateUIForAuth();
+        });
 
-//   // support multiple pages having the form
-//   authForm.forEach(form => {
-//     form.addEventListener('submit', async (e) => {
-//       e.preventDefault();
-//       const isSignup = (document.getElementById('nameRow') && !document.getElementById('nameRow').classList.contains('hidden'));
-//       const name = document.getElementById('authName') ? document.getElementById('authName').value.trim() : '';
-//       const email = document.getElementById('authEmail').value.trim();
-//       const password = document.getElementById('authPassword').value.trim();
-//       const errorEl = document.getElementById('authError');
+        function updateUIForAuth() {
+            if (isLoggedIn) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                profileBtn.style.display = 'block';
+                welcomeText.style.display = 'block';
+                welcomeText.textContent = `Welcome, ${currentUser}!`;
+            } else {
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                profileBtn.style.display = 'none';
+                welcomeText.style.display = 'none';
+            }
+        }
 
-//       errorEl.textContent = '';
+        // Form functionality
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const sections = document.querySelectorAll('.form-section');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+                clearErrors();
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('signupForm').classList.add('active');
+                clearErrors();
+            }
+        }
 
-//       try {
-//         if (isSignup) {
-//           const res = await fetch(API_ROOT + '/api/signup', {
-//             method: 'POST',
-//             headers:{'Content-Type':'application/json'},
-//             body: JSON.stringify({ name, email, password })
-//           });
-//           const data = await res.json();
-//           if (!res.ok) throw new Error(data.error || 'Signup failed');
-//           localStorage.setItem('eg_token', data.token);
-//           closeAuthModal();
-//           window.location.href = 'profile.html';
-//         } else {
-//           const res = await fetch(API_ROOT + '/api/login', {
-//             method: 'POST',
-//             headers:{'Content-Type':'application/json'},
-//             body: JSON.stringify({ email, password })
-//           });
-//           const data = await res.json();
-//           if (!res.ok) throw new Error(data.error || 'Login failed');
-//           localStorage.setItem('eg_token', data.token);
-//           closeAuthModal();
-//           window.location.href = 'profile.html';
-//         }
-//       } catch (err) {
-//         errorEl.textContent = err.message;
-//       }
-//     });
-//   });
+        // Handle category change
+        function handleCategoryChange() {
+            const category = document.getElementById('studentCategory').value;
+            const collegeFields = document.getElementById('collegeFields');
+            const schoolFields = document.getElementById('schoolFields');
+            const commonFields = document.getElementById('commonFields');
+            
+            // Hide all category-specific fields first
+            collegeFields.classList.remove('show');
+            schoolFields.classList.remove('show');
+            commonFields.classList.remove('show');
+            
+            // Show relevant fields
+            if (category === 'college') {
+                collegeFields.classList.add('show');
+                commonFields.classList.add('show');
+            } else if (category === 'school') {
+                schoolFields.classList.add('show');
+                commonFields.classList.add('show');
+            }
+            
+            clearErrors();
+        }
 
-//   // initial state: login mode
-//   setAuthMode('login');
-// }
+        // Clear all error messages
+        function clearErrors() {
+            const errors = document.querySelectorAll('.error');
+            errors.forEach(error => {
+                error.classList.remove('show');
+                error.textContent = '';
+            });
+        }
 
-// function openAuthModal(){ 
-//   const m = document.getElementById('authModal'); 
-//   if (m) m.classList.remove('hidden');
-//   document.getElementById('authTitle').textContent = 'Log In';
-//   setAuthMode('login');
-// }
-// function closeAuthModal(){
-//   const m = document.getElementById('authModal'); 
-//   if (m) m.classList.add('hidden');
-// }
-// function setAuthMode(mode){
-//   const nameRow = document.getElementById('nameRow');
-//   const toggle = document.querySelectorAll('#toggleAuthMode');
-//   const submit = document.querySelectorAll('#authSubmit');
-//   if (mode === 'signup') {
-//     nameRow && nameRow.classList.remove('hidden');
-//     if (toggle) toggle.forEach(t=>t.textContent = 'Switch to Log in');
-//     if (submit) submit.forEach(s=>s.textContent = 'Sign up');
-//     document.getElementById('authTitle') && (document.getElementById('authTitle').textContent = 'Sign Up');
-//   } else {
-//     nameRow && nameRow.classList.add('hidden');
-//     if (toggle) toggle.forEach(t=>t.textContent = 'Switch to Sign up');
-//     if (submit) submit.forEach(s=>s.textContent = 'Log in');
-//     document.getElementById('authTitle') && (document.getElementById('authTitle').textContent = 'Log In');
-//   }
-// }
-// function toggleMode(){
-//   const nameRow = document.getElementById('nameRow');
-//   if (nameRow && nameRow.classList.contains('hidden')) setAuthMode('signup');
-//   else setAuthMode('login');
-// }
+        // Show error message
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+        }
 
-// // --- profile and header hooks ---
-// function initProfileButtons(){
-//   // Take Quiz buttons all point to career.html
-//   document.querySelectorAll('#takeQuizBtn, #takeQuizBtn2, #takeQuizBtn3, #takeQuizBtn4, #takeQuizBtn5').forEach(b=>{
-//     b && b.addEventListener('click', ()=> window.location.href = 'career.html');
-//   });
+        // Validate email format
+        function isValidEmail(email) {
+            return /\S+@\S+\.\S+/.test(email);
+        }
 
-//   // header profile button behaviour: if logged in go to profile, else open modal
-//   document.querySelectorAll('#profileBtn, #profileBtn2, #profileBtn3, #profileBtn4, #profileBtn5').forEach(b=>{
-//     if (!b) return;
-//     b.addEventListener('click', () => {
-//       const token = localStorage.getItem('eg_token');
-//       if (token) window.location.href = 'profile.html';
-//       else openAuthModal();
-//     });
-//   });
-// }
+        // Handle Login
+        function handleLogin() {
+            clearErrors();
+            let isValid = true;
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!username) {
+                showError('loginUsername', 'Username is required');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showError('loginPassword', 'Password is required');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                alert(`Login successful!\nUsername: ${username}`);
+                // Clear form
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
 
-// async function loadProfileIfOnPage(){
-//   if (!document.getElementById('profileCard')) return;
-//   const token = localStorage.getItem('eg_token');
-//   const profileCard = document.getElementById('profileCard');
-//   const authNotice = document.getElementById('authNotice');
+        // Handle Signup
+        function handleSignup() {
+            clearErrors();
+            let isValid = true;
+            
+            // Get all form values
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const category = document.getElementById('studentCategory').value;
+            const gender = document.getElementById('gender').value;
+            const state = document.getElementById('state').value;
+            const city = document.getElementById('city').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Basic validations
+            if (!firstName) {
+                showError('firstName', 'First name is required');
+                isValid = false;
+            }
+            
+            if (!lastName) {
+                showError('lastName', 'Last name is required');
+                isValid = false;
+            }
+            
+            if (!username) {
+                showError('signupUsername', 'Username is required');
+                isValid = false;
+            } else if (registeredUsers.has(username.toLowerCase())) {
+                showError('signupUsername', 'Username already taken. Please choose another.');
+                isValid = false;
+            }
+            
+            if (!email) {
+                showError('email', 'Email is required');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError('email', 'Invalid email format');
+                isValid = false;
+            }
+            
+            if (!category) {
+                showError('category', 'Select student category');
+                isValid = false;
+            }
+            
+            // Category-specific validations
+            if (category === 'college') {
+                const university = document.getElementById('university').value.trim();
+                const course = document.getElementById('course').value.trim();
+                const cgpa = document.getElementById('cgpa').value;
+                
+                if (!university) {
+                    showError('university', 'University is required');
+                    isValid = false;
+                }
+                
+                if (!course) {
+                    showError('course', 'Course is required');
+                    isValid = false;
+                }
+                
+                if (!cgpa) {
+                    showError('cgpa', 'CGPA is required');
+                    isValid = false;
+                } else if (cgpa < 0 || cgpa > 10) {
+                    showError('cgpa', 'CGPA must be between 0-10');
+                    isValid = false;
+                }
+            } else if (category === 'school') {
+                const stream = document.getElementById('stream').value;
+                const tenth = document.getElementById('tenth').value;
+                const twelfth = document.getElementById('twelfth').value;
+                const board = document.getElementById('board').value;
+                
+                if (!stream) {
+                    showError('stream', 'Stream is required');
+                    isValid = false;
+                }
+                
+                if (!tenth) {
+                    showError('tenth', '10th percentage is required');
+                    isValid = false;
+                } else if (tenth < 0 || tenth > 100) {
+                    showError('tenth', 'Invalid percentage');
+                    isValid = false;
+                }
+                
+                if (!twelfth) {
+                    showError('twelfth', '12th percentage is required');
+                    isValid = false;
+                } else if (twelfth < 0 || twelfth > 100) {
+                    showError('twelfth', 'Invalid percentage');
+                    isValid = false;
+                }
+                
+                if (!board) {
+                    showError('board', 'Board is required');
+                    isValid = false;
+                }
+            }
+            
+            // Common field validations
+            if (category) {
+                if (!gender) {
+                    showError('gender', 'Gender is required');
+                    isValid = false;
+                }
+                
+                if (!state) {
+                    showError('state', 'State is required');
+                    isValid = false;
+                }
+                
+                if (!city) {
+                    showError('city', 'City is required');
+                    isValid = false;
+                }
+                
+                if (!password) {
+                    showError('signupPassword', 'Password is required');
+                    isValid = false;
+                } else if (password.length < 6) {
+                    showError('signupPassword', 'Password must be at least 6 characters');
+                    isValid = false;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('confirmPassword', 'Passwords do not match');
+                    isValid = false;
+                }
+            }
+            
+            if (isValid) {
+                // Add username to registered users
+                registeredUsers.add(username.toLowerCase());
+                
+                alert(`Registration successful!\nWelcome to EduGuide, ${firstName}!`);
+                
+                // Reset form and switch to login
+                document.getElementById('signupForm').querySelectorAll('input, select').forEach(input => {
+                    input.value = '';
+                });
+                document.getElementById('collegeFields').classList.remove('show');
+                document.getElementById('schoolFields').classList.remove('show');
+                document.getElementById('commonFields').classList.remove('show');
+                
+                switchTab('login');
+            }
+        }
 
-//   if (!token) {
-//     profileCard.classList.add('hidden');
-//     authNotice.classList.remove('hidden');
-//     return;
-//   }
-
-//   try {
-//     const res = await fetch(API_ROOT + '/api/profile', { headers: { Authorization: 'Bearer ' + token }});
-//     if (!res.ok) throw new Error('Not authorized');
-//     const data = await res.json();
-//     const user = data.user;
-//     document.getElementById('profileName').textContent = user.name;
-//     document.getElementById('profileEmail').textContent = user.email;
-//     profileCard.classList.remove('hidden');
-//     authNotice && authNotice.classList.add('hidden');
-//   } catch (err) {
-//     console.warn(err);
-//     profileCard.classList.add('hidden');
-//     authNotice.classList.remove('hidden');
-//   }
-// }
-
-// // --- Colleges page dynamic content ---
-// function initCollegePage(){
-//   if (!document.querySelector('.college-list')) return;
-
-//   // sample data
-//   const sample = [
-//     { name: "Delhi University - Sri Venkateswara College", type:"government", city:"New Delhi", est:1961, seats:2500, courses:5, fees:"₹15,000 - 25,000", cutoff:"95+" },
-//     { name: "Jamia Millia Islamia", type:"government", city:"New Delhi", est:1920, seats:8000, courses:6, fees:"₹20,000 - 40,000", cutoff:"90+" },
-//     { name: "Amity University", type:"private", city:"Noida", est:2005, seats:15000, courses:6, fees:"₹80,000 - 2,50,000", cutoff:"70+" },
-//     { name: "Bharati Vidyapeeth", type:"deemed", city:"New Delhi", est:1996, seats:5000, courses:6, fees:"₹50,000 - 4,00,000", cutoff:"75+" }
-//   ];
-
-//   const container = document.querySelector('.college-list');
-//   const search = document.getElementById('collegeSearch');
-//   const typeSel = document.getElementById('collegeType');
-
-//   function render(list){
-//     container.innerHTML = '';
-//     list.forEach(c=>{
-//       const el = document.createElement('div');
-//       el.className = 'college-card';
-//       el.innerHTML = `
-//         <h4>${c.name}</h4>
-//         <p class="muted">${c.city} • Established ${c.est}</p>
-//         <div style="margin-top:8px"><strong>Fees:</strong> ${c.fees} • <strong>Cutoff:</strong> ${c.cutoff}</div>
-//         <div style="margin-top:12px"><button class="btn small primary" onclick="window.alert('View details for ${c.name}')">View Details</button></div>
-//       `;
-//       container.appendChild(el);
-//     });
-//   }
-
-//   render(sample);
-
-//   function applyFilters(){
-//     const q = search.value.trim().toLowerCase();
-//     const type = typeSel.value;
-//     let filtered = sample.filter(s => (s.name.toLowerCase().includes(q) || s.city.toLowerCase().includes(q)));
-//     if (type !== 'any') filtered = filtered.filter(s => s.type === type);
-//     render(filtered);
-//   }
-
-//   search && search.addEventListener('input', applyFilters);
-//   typeSel && typeSel.addEventListener('change', applyFilters);
-// }
+        // Handle Google Authentication
+        function handleGoogleAuth() {
+            alert('Google Authentication would be integrated here.\nRedirecting to Google Sign-In...');
+        }
+    
