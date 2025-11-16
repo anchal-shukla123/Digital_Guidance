@@ -1,3 +1,4 @@
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 * {
             margin: 0;
             padding: 0;
@@ -5,7 +6,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+            font-family: "Montserrat", sans-serif;
             background-color: #24252A;
             color: #E4E4E4;
             line-height: 1.6;
@@ -127,7 +129,7 @@
             background: #3A3B40;
             border-radius: 5px;
             outline: none;
-            -webkit-appearance: none;
+            
         }
 
         input[type="range"]::-webkit-slider-thumb {
