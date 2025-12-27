@@ -1,6 +1,1 @@
-# Digital_Guidance
-one stop personalized career and education advisor
-this  is now half way done
-more to enhance facilities like nodejs, express, and database with sql
-Project on  its way to be done
-let us convert it to react
+This is a student guidance platform that provides location based directory of colleges to students
